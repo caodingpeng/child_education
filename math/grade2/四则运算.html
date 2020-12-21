@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>shadow demo</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+
+        table, td, th {
+            border: 0.5px solid rgba(0, 0, 0, .2);
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 26px;
+        }
+        td{
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="shadow"></div>
+    <table id="table">
+        <tbody id="tbody">
+        </tbody>
+    </table>
+    <script>
+        onLoaded();
+
+        function getMultiDiv(count,multi){
+            let data=new Map();
+            while(data.size < count){
+                let a = Math.floor(Math.random()*9)+1
+                let b = Math.floor(Math.random()*9)+1
+
+                data.set(`${a}_${b}`, multi?[a,b,"x"]:[a*b,a,"÷"])
+            }
+
+            return Array.from(data.values());;
+        }
+
+        function genAddSub(count,add){
+            let data=new Map();
+            while(data.size < count){
+                var a = Math.floor(Math.random()*99)+1
+                let b = Math.floor(Math.random()*99)+1
+
+                if(add){
+                    if(a+b < 100){
+                        data.set(`${a}_${b}`,[a,b,'+'])
+                    }
+                }else{
+                    if(a>b){
+                        data.set(`${a}_${b}`,[a,b,'-'])
+                    }else{
+                        data.set(`${b}_${a}`, [b,a,'-'])
+                    }
+                }
+
+            }
+
+            return Array.from(data.values());
+        }
+
+function getRandomColor() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
+        function onLoaded() {
+            let data = [];
+            data = data.concat(genAddSub(25,true))
+            console.info(genAddSub(25,true))
+            data = data.concat(genAddSub(25,false))
+            data = data.concat(getMultiDiv(25,true))
+            data = data.concat(getMultiDiv(25,false))
+            
+            let maxStep = 4;
+            let table = document.getElementById("tbody");
+            
+            while(data.length >0 ){
+                let step = Math.min(maxStep, data.length);
+                
+                let rowStr = `<tr class="row">`
+                for(var i=0;i<step;i++){
+                    let index = Math.floor(Math.random()*data.length)
+                    let item = data[index]
+                    let color = getRandomColor()
+                    rowStr = rowStr + `<td style="color:${color}">${item[0]} ${item[2]} ${item[1]} =</td>`
+                    data.splice(index, 1)
+                }
+                rowStr = rowStr + `</tr>`
+                table.insertAdjacentHTML('beforeend', rowStr)
+            }
+        }
+    </script>
+</body>
+
+</html>
